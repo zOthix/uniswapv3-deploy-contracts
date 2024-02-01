@@ -52,7 +52,7 @@ async function main() {
 
   nativeCoinToDeposit = 1000000000000000000000
   console.log("Depositing Native coin to get WETH" , nativeCoinToDeposit/1e18 )
-  const txDep = await weth.deposit({value: String(nativeCoinToDeposit), gasLimit: 30000000 });
+  const txDep = await weth.deposit({value: String(BigInt(nativeCoinToDeposit)), gasLimit: 30000000 });
   await txDep.wait();
   console.log({txDep: txDep.hash})
 
