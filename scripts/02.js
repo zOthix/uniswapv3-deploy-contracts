@@ -6,16 +6,11 @@ async function main() {
 
 
   
-  Tether = await ethers.getContractFactory('Tether', owner);
-  tether = await Tether.deploy({gasLimit: 30000000 });
+  USDT = await ethers.getContractFactory('Tether', owner);
+  usdt = await USDT.deploy({gasLimit: 30000000 });
 
-  Usdc = await ethers.getContractFactory('UsdCoin', owner);
-  usdc = await Usdc.deploy({gasLimit: 30000000 });
-
-
-  UNI = await ethers.getContractFactory('Uni', owner);
-  uni = await UNI.deploy({gasLimit: 30000000 });
-
+  USDC = await ethers.getContractFactory('UsdCoin', owner);
+  usdc = await USDC.deploy({gasLimit: 30000000 });
 
   WBTC= await ethers.getContractFactory('WrappedBTC', owner);
   wbtc = await WBTC.deploy({gasLimit: 30000000 });
@@ -23,7 +18,7 @@ async function main() {
   DAI= await ethers.getContractFactory('DAI', owner);
   dai = await DAI.deploy({gasLimit: 30000000 });
 
-  await tether.connect(owner).mint(
+  await usdt.connect(owner).mint(
     signer2.address,
     ethers.parseEther('1000000000'),
     {gasLimit: 30000000 }
@@ -53,7 +48,6 @@ async function main() {
   let addresses = [
     `USDC_ADDRESS=${usdc.target}`, 
     `USDT_ADDRESS=${tether.target}`, 
-    `UNI_ADDRESS=${uni.target}`,  
     `WBTC_ADDRESS=${wbtc.target}`,
     `DAI_ADDRESS=${dai.target}`, 
     ``,
