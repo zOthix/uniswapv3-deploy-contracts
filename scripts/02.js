@@ -20,7 +20,7 @@ async function main() {
   WBTC= await ethers.getContractFactory('WrappedBTC', owner);
   wbtc = await WBTC.deploy({gasLimit: 30000000 });
 
-  DAI= await ethers.getContractFactory('WrappedBTC', owner);
+  DAI= await ethers.getContractFactory('DAI', owner);
   dai = await DAI.deploy({gasLimit: 30000000 });
 
   await tether.connect(owner).mint(
