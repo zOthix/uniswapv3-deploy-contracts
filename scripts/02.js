@@ -47,7 +47,7 @@ async function main() {
 
   let addresses = [
     `USDC_ADDRESS=${usdc.target}`, 
-    `USDT_ADDRESS=${tether.target}`, 
+    `USDT_ADDRESS=${usdt.target}`, 
     `WBTC_ADDRESS=${wbtc.target}`,
     `DAI_ADDRESS=${dai.target}`, 
     ``,
