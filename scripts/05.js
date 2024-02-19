@@ -8,7 +8,7 @@ DAI_ADDRESS = process.env.DAI_ADDRESS;
 USDC_ADDRESS = process.env.USDC_ADDRESS;
 
 const { Contract } = require("ethers");
-const SwapRouter = require("@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json");
+const SwapRouter = require("@uniswap/swap-router-contracts/artifacts/contracts/SwapRouter02.sol/SwapRouter02.json");
 const erc20 = require("../artifacts/contracts/Tether.sol/Tether.json");
 
 const amountToSwap = 599670;
@@ -33,23 +33,10 @@ async function swap(swapRouterContract, token1Addr, token2Addr, poolName) {
     tokenOut: token2Addr,
     fee: "3000",
     recipient: owner,
-    deadline: Math.floor(Date.now() / 1000) + 60 * 10,
     amountIn: amountToSwap,
     amountOutMinimum: 0,
-    sqrtPriceLimitX96: zeroForOne
-      ? 5295128739n
-      : 6703485210103287273052203988822378723970342n,
+    sqrtPriceLimitX96: 0
   };
-
-  const condition = zeroForOne
-    ? params.sqrtPriceLimitX96 < 79228162514264337593543950336n &&
-      params.sqrtPriceLimitX96 > 4295128739n
-    : params.sqrtPriceLimitX96 > 79228162514264337593543950336n &&
-      params.sqrtPriceLimitX96 <
-        1461446703485210103287273052203988822378723970342n;
-  if (!condition) {
-    throw new Error("SPL");
-  }
 
   const data = await swapRouterContract
     .connect(owner)
