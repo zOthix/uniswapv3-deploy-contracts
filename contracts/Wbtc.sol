@@ -9,4 +9,8 @@ contract WrappedBTC is ERC20, Ownable {
   function mint(address to, uint256 amount) public onlyOwner {
     _mint(to, amount);
   }
+
+  function decimals() public override view virtual returns (uint8) {
+    return 8;
+  }
 }
