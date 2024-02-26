@@ -1,6 +1,8 @@
-const { ContractFactory, getAddress, encodeBytes32String } = require("ethers");
+require("dotenv").config();
+const { ContractFactory, getAddress, encodeBytes32String, ZeroHash } = require("ethers");
 const WETH9 = require("./WETH9.json");
-
+const UNIVERSAL_ROUTER = require("./UniversalRouter.json");
+const UNSUPPORTED_PROTOCOL = require("./UnsupportedProtocol.json");
 const fs = require("fs");
 const { promisify } = require("util");
 
@@ -16,6 +18,8 @@ const artifacts = {
   v3Migration: require("@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json"),
   ticklens: require("@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json"),
   WETH9,
+  UNIVERSAL_ROUTER,
+  UNSUPPORTED_PROTOCOL
 };
 
 const linkLibraries = ({ bytecode, linkReferences }, libraries) => {
@@ -196,6 +200,46 @@ async function main() {
   );
   console.log({ swapRouterAddress: swapRouter.target });
 
+  console.log("Deploying Unsupported protocol..");
+  UnsupportedProtocol = new ContractFactory(
+    artifacts.UNSUPPORTED_PROTOCOL.abi,
+    artifacts.UNSUPPORTED_PROTOCOL.bytecode,
+    owner
+  );
+  
+  unsupportedProtocol = await UnsupportedProtocol.deploy({ gasLimit: 3000000 });
+  console.log({ unsupportedProtocol : unsupportedProtocol.target });
+
+  console.log("Deploying Universal router..");
+  UniversalRouter = new ContractFactory(
+    artifacts.UNIVERSAL_ROUTER.abi,
+    artifacts.UNIVERSAL_ROUTER.bytecode,
+    owner
+  );
+
+  universalRouter = await UniversalRouter.deploy(
+    process.env.PERMIT2_ADDRESS,
+    weth.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    unsupportedProtocol.target,
+    factoryV3.target,
+    ZeroHash,
+    process.env.POOL_INIT_CODE_HASH);
+  console.log({ universalRouterAddress: universalRouter.target });
+
 
   let addresses = [
     ``,
@@ -210,6 +254,8 @@ async function main() {
     `QUOTER_ADDRESS=${quoter.target}`,
     `V3_MIGRATOR_ADDRESS=${v3Migration.target}`,
     `TICK_LENS_ADDRESS=${ticklens.target}`,
+    `UNSUPPORTED_PROTOCOL_ADDRESS=${unsupportedProtocol.target}`,
+    `UNIVERSAL_ROUTER_ADDRESS=${universalRouter.target}`,
     ``,
     `# Coin Addresses`,
     `WETH_ADDRESS=${weth.target}`,
